@@ -45,7 +45,7 @@ class DriverApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const DriverHomePage(title: 'Bienvenido a Andafast!'), // Updated title, assuming similar for driver
+      home: const DriverHomePage(title: 'Bienvenido a Perú Dash!'), // Updated title, assuming similar for driver
     );
   }
 }

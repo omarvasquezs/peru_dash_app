@@ -47,7 +47,7 @@ class CustomerApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const CustomerHomePage(title: 'Bienvenido a Andafast!'), // Updated title
+      home: const CustomerHomePage(title: 'Bienvenido a Perú Dash!'), // Updated title
       // home: Scaffold(appBar: AppBar(title: const Text('Test Customer App')), body: const Center(child: Text('Loading Test...'))), // Temporary simple home
     );
   }

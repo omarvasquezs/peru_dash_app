@@ -16,7 +16,7 @@ void main() {
     await tester.pumpWidget(const CustomerApp()); // Changed to CustomerApp
 
     // Verify that the main title is present.
-    expect(find.text('Bienvenido a Andafast!'), findsOneWidget);
+    expect(find.text('Bienvenido a Perú Dash!'), findsOneWidget);
 
     // Verify that the 'Ingresar' button is present.
     expect(find.widgetWithText(ElevatedButton, 'Ingresar'), findsOneWidget);
