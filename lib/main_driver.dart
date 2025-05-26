@@ -71,15 +71,15 @@ class _DriverHomePageState extends State<DriverHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              // Container(
-              //   height: 100,
-              //   margin: const EdgeInsets.symmetric(vertical: 30),
-              //   alignment: Alignment.center,
-              //   child: Image.network( // Placeholder for logo, replace with your asset
-              //     'https://via.placeholder.com/150/FF9800/FFFFFF?Text=Andafast+Logo',
-              //     height: 80,
-              //   ),
-              // ),
+              Container(
+                height: 100,
+                margin: const EdgeInsets.symmetric(vertical: 30),
+                alignment: Alignment.center,
+                child: Image.asset( // Placeholder for logo, replace with your asset
+                  'assets/images/logo.png',
+                  height: 80,
+                ),
+              ),
               Text(
                 widget.title,
                 textAlign: TextAlign.center,

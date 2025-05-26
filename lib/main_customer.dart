@@ -63,6 +63,21 @@ class CustomerHomePage extends StatefulWidget {
 
 class _CustomerHomePageState extends State<CustomerHomePage> {
   bool _isLogin = true; // To toggle between Login and Sign Up
+  final _formKey = GlobalKey<FormState>(); // Add form key for validation
+
+  // Controllers for registration form
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  String _selectedAccountType = 'Cliente'; // Default account type
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,14 +89,12 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              // Placeholder for Logo
               // Container(
               //   height: 100,
               //   margin: const EdgeInsets.symmetric(vertical: 30),
               //   alignment: Alignment.center,
-              //   child: Image.network( // Placeholder for logo, replace with your asset
-              //     'https://via.placeholder.com/150/FF9800/FFFFFF?Text=Andafast+Logo',
-              //     // For a local asset, use: Image.asset('assets/logo.png'),
+              //   child: Image.asset( // Placeholder for logo, replace with your asset
+              //     'assets/images/logo.png',
               //     height: 80,
               //   ),
               // ),
@@ -184,7 +197,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         TextFormField(
           keyboardType: TextInputType.phone,
           decoration: const InputDecoration(
-            hintText: 'g60096044', // Example from screenshot
+            hintText: '960096044',
             prefixIcon: Padding(
               padding: EdgeInsets.all(15.0),
               child: Text('+51', style: TextStyle(color: Colors.white70)),
@@ -211,79 +224,119 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   }
 
   Widget _buildRegistrationForm(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Text('Nombre completo', style: TextStyle(color: Colors.white70)),
-        const SizedBox(height: 8),
-        TextFormField(
-          decoration: const InputDecoration(
-            hintText: 'Ingresa tu nombre',
-            prefixIcon: Icon(Icons.person_outline, color: Colors.white70),
+    return Form( // Wrap with Form widget
+      key: _formKey, // Assign the form key
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text('Nombre completo', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _nameController,
+            decoration: const InputDecoration(
+              hintText: 'Ingresa tu nombre',
+              prefixIcon: Icon(Icons.person_outline, color: Colors.white70),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingresa tu nombre';
+              }
+              return null;
+            },
           ),
-        ),
-        const SizedBox(height: 15),
-        const Text('Correo electrónico', style: TextStyle(color: Colors.white70)),
-        const SizedBox(height: 8),
-        TextFormField(
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(
-            hintText: 'Ingresa tu correo',
-            prefixIcon: Icon(Icons.email_outlined, color: Colors.white70),
+          const SizedBox(height: 15),
+          const Text('Correo electrónico', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              hintText: 'Ingresa tu correo',
+              prefixIcon: Icon(Icons.email_outlined, color: Colors.white70),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingresa tu correo electrónico';
+              }
+              if (!RegExp(r'^[^@]+@[^@]+\\.[^@]+').hasMatch(value)) {
+                return 'Por favor ingresa un correo válido';
+              }
+              return null;
+            },
           ),
-        ),
-        const SizedBox(height: 15),
-        const Text('Número de teléfono', style: TextStyle(color: Colors.white70)),
-        const SizedBox(height: 8),
-        TextFormField(
-          keyboardType: TextInputType.phone,
-          decoration: const InputDecoration(
-            hintText: '999 888 777', // Example from screenshot
-             prefixIcon: Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Text('+51', style: TextStyle(color: Colors.white70)),
-            )
+          const SizedBox(height: 15),
+          const Text('Número de teléfono', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _phoneController,
+            keyboardType: TextInputType.phone,
+            decoration: const InputDecoration(
+              hintText: '999 888 777', // Example from screenshot
+              prefixIcon: Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Text('+51', style: TextStyle(color: Colors.white70)),
+              )
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingresa tu número de teléfono';
+              }
+              // Basic numeric check, can be enhanced
+              if (int.tryParse(value.replaceAll(' ', '')) == null) {
+                return 'Por favor ingresa un número válido';
+              }
+              return null;
+            },
           ),
-        ),
-        const SizedBox(height: 15),
-        const Text('Tipo de cuenta', style: TextStyle(color: Colors.white70)),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildAccountTypeButton(context, 'Cliente', Icons.person, true), // Example: Cliente selected
-            _buildAccountTypeButton(context, 'Comercio', Icons.storefront, false),
-            _buildAccountTypeButton(context, 'Repartidor', Icons.delivery_dining, false),
-          ],
-        ),
-        const SizedBox(height: 30),
-        ElevatedButton(
-          onPressed: () {
-            // TODO: Create Account
-            print('Create Account Tapped');
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          const SizedBox(height: 15),
+          const Text('Tipo de cuenta', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Crear cuenta'),
-              SizedBox(width: 8),
-              Icon(Icons.arrow_forward),
+              _buildAccountTypeButton(context, 'Cliente', Icons.person, _selectedAccountType == 'Cliente', () => setState(() => _selectedAccountType = 'Cliente')),
+              _buildAccountTypeButton(context, 'Comercio', Icons.storefront, _selectedAccountType == 'Comercio', () => setState(() => _selectedAccountType = 'Comercio')),
+              _buildAccountTypeButton(context, 'Repartidor', Icons.delivery_dining, _selectedAccountType == 'Repartidor', () => setState(() => _selectedAccountType = 'Repartidor')),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: 30),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                // If the form is valid, display a snackbar.
+                // Or, actually process the data.
+                print('Create Account Tapped - Form is valid');
+                print('Name: ${_nameController.text}');
+                print('Email: ${_emailController.text}');
+                print('Phone: ${_phoneController.text}');
+                print('Account Type: $_selectedAccountType');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Procesando datos...')),
+                );
+              } else {
+                print('Create Account Tapped - Form is invalid');
+              }
+            },
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Crear cuenta'),
+                SizedBox(width: 8),
+                Icon(Icons.arrow_forward),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildAccountTypeButton(BuildContext context, String label, IconData icon, bool isSelected) {
+  Widget _buildAccountTypeButton(BuildContext context, String label, IconData icon, bool isSelected, VoidCallback onPressed) {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
         child: ElevatedButton.icon(
-          onPressed: () {
-            // TODO: Handle account type selection
-            print('Account type selected: $label');
-          },
+          onPressed: onPressed,
           icon: Icon(icon, size: 20),
           label: Text(label, style: const TextStyle(fontSize: 12)),
           style: ElevatedButton.styleFrom(
