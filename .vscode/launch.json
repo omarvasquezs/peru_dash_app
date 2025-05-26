@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Customer App",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_customer.dart",
+      "args": []
+    },
+    {
+      "name": "Debug Driver App",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_driver.dart",
+      "args": []
+    }
+  ]
+}
