@@ -6,14 +6,78 @@
       "request": "launch",
       "type": "dart",
       "program": "lib/main_customer.dart",
-      "args": []
+      "flutterMode": "debug",
+      "args": [
+        "--flavor",
+        "customer",
+        "-t",
+        "lib/main_customer.dart"
+      ]
     },
     {
       "name": "Debug Driver App",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_driver.dart",
-      "args": []
+      "flutterMode": "debug",
+      "args": [
+        "--flavor",
+        "driver",
+        "-t",
+        "lib/main_driver.dart"
+      ]
+    },
+    {
+      "name": "Run Customer App",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_customer.dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "customer",
+        "-t",
+        "lib/main_customer.dart"
+      ]
+    },
+    {
+      "name": "Run Driver App",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_driver.dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "driver",
+        "-t",
+        "lib/main_driver.dart"
+      ]
+    },
+    {
+      "name": "Profile Customer App",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_customer.dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "customer",
+        "-t",
+        "lib/main_customer.dart"
+      ]
+    },
+    {
+      "name": "Profile Driver App",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_driver.dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "driver",
+        "-t",
+        "lib/main_driver.dart"
+      ]
     }
   ]
 }

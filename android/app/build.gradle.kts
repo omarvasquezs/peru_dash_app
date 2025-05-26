@@ -23,11 +23,26 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.peru_dash_app"
         // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    flavorDimensions += "appType" // Add this line
+
+    productFlavors {
+        create("customer") {
+            dimension = "appType"
+            applicationIdSuffix = ".customer"
+            resValue("string", "app_name", "PeruDash")
+        }
+        create("driver") {
+            dimension = "appType"
+            applicationIdSuffix = ".driver"
+            resValue("string", "app_name", "Soy PeruDash")
+        }
     }
 
     buildTypes {
