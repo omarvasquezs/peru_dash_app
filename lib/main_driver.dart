@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Add this import
 
 void main() {
   runApp(const DriverApp());
@@ -134,29 +135,39 @@ class _DriverHomePageState extends State<DriverHomePage> {
               if (_isLogin) _buildDriverLoginForm(context) else _buildDriverRegistrationForm(context),
               const SizedBox(height: 20),
               // Social logins might be less common for driver apps, or different
-              // Text(
-              //   'o continúa con',
-              //   textAlign: TextAlign.center,
-              //   style: Theme.of(context).textTheme.bodyMedium,
-              // ),
-              // const SizedBox(height: 20),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   children: [
-              //     ElevatedButton.icon(
-              //       onPressed: () { /* TODO: Google Sign In */ },
-              //       icon: const Icon(Icons.g_mobiledata, color: Colors.white), 
-              //       label: const Text('Google'),
-              //        style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-              //     ),
-              //     ElevatedButton.icon(
-              //       onPressed: () { /* TODO: Apple Sign In */ },
-              //       icon: const Icon(Icons.apple, color: Colors.white),
-              //       label: const Text('Apple'),
-              //       style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-              //     ),
-              //   ],
-              // ),
+              Text(
+                'o continúa con',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // TODO: Google Sign In
+                      print('Google Sign In Tapped');
+                    },
+                    icon: const FaIcon(FontAwesomeIcons.google, color: Colors.white), // Changed Icon
+                    label: const Text('Google'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFDB4437), // Google Red
+                        foregroundColor: Colors.white),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // TODO: Apple Sign In
+                      print('Apple Sign In Tapped');
+                    },
+                    icon: const FaIcon(FontAwesomeIcons.apple, color: Colors.white), // Changed Icon
+                    label: const Text('Apple'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white),
+                  ),
+                ],
+              ),
               // The bottom links for business/courier registration are likely not needed in the driver app itself.
             ],
           ),

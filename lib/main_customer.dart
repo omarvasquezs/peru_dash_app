@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:peru_dash_app/customer_app/screens/register_business_screen.dart';
 import 'package:peru_dash_app/customer_app/screens/become_courier_screen.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Add this import
 
 void main() {
   runApp(const CustomerApp());
@@ -163,18 +164,22 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                       // TODO: Google Sign In
                       print('Google Sign In Tapped');
                     },
-                    icon: const Icon(Icons.g_mobiledata, color: Colors.white), // Placeholder, use a proper Google icon
+                    icon: const FaIcon(FontAwesomeIcons.google, color: Colors.white), // Changed Icon
                     label: const Text('Google'),
-                     style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFDB4437), // Google Red
+                        foregroundColor: Colors.white),
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
                       // TODO: Apple Sign In
                       print('Apple Sign In Tapped');
                     },
-                    icon: const Icon(Icons.apple, color: Colors.white),
+                    icon: const FaIcon(FontAwesomeIcons.apple, color: Colors.white), // Changed Icon
                     label: const Text('Apple'),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white),
                   ),
                 ],
               ),
