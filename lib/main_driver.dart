@@ -79,6 +79,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                   'assets/images/logo.png',
                   height: 80,
                 ),
+                // child: const Icon(Icons.drive_eta, size: 80, color: Colors.orange), // Placeholder Icon
               ),
               Text(
                 widget.title,

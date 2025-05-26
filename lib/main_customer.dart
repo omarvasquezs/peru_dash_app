@@ -89,15 +89,16 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              // Container(
-              //   height: 100,
-              //   margin: const EdgeInsets.symmetric(vertical: 30),
-              //   alignment: Alignment.center,
-              //   child: Image.asset( // Placeholder for logo, replace with your asset
-              //     'assets/images/logo.png',
-              //     height: 80,
-              //   ),
-              // ),
+              Container(
+                height: 100,
+                margin: const EdgeInsets.symmetric(vertical: 30),
+                alignment: Alignment.center,
+                child: Image.asset( // Placeholder for logo, replace with your asset
+                  'assets/images/logo.png',
+                  height: 80,
+                ),
+                // child: const Icon(Icons.business, size: 80, color: Colors.orange), // Placeholder Icon
+              ),
               Text(
                 widget.title,
                 textAlign: TextAlign.center,
