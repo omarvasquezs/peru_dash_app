@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:peru_dash_app/customer_app/screens/register_business_screen.dart';
+import 'package:peru_dash_app/customer_app/screens/become_courier_screen.dart';
 
 void main() {
   runApp(const CustomerApp());
@@ -298,8 +300,19 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
    Widget _buildBottomLink(BuildContext context, String title, String subtitle, IconData icon) {
     return InkWell(
       onTap: () {
-        // TODO: Navigate to respective page
-        print('Bottom link tapped: $title');
+        if (title == 'Registrar mi negocio') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const RegisterBusinessScreen()),
+          );
+        } else if (title == 'Ser courier Andafast') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const BecomeCourierScreen()),
+          );
+        } else {
+          print('Bottom link tapped: $title');
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(12),
