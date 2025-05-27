@@ -76,8 +76,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
                 height: 100,
                 margin: const EdgeInsets.symmetric(vertical: 30),
                 alignment: Alignment.center,
-                child: Image.asset( // Placeholder for logo, replace with your asset
-                  'assets/images/logo.png',
+                child: Image.asset( // Use driver-specific logo
+                  'assets/images/logo_driver.png',
                   height: 80,
                 ),
                 // child: const Icon(Icons.drive_eta, size: 80, color: Colors.orange), // Placeholder Icon
