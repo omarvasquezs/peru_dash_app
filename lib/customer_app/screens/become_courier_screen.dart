@@ -101,21 +101,22 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
             children: <Widget>[
               // Personal Information
               _buildSectionTitle('Información Personal'),
-              _buildTextFormField(_fullNameController, 'Nombres completos'),
-              _buildTextFormField(_dniController, 'DNI', keyboardType: TextInputType.number, maxLength: 8),
+              _buildTextFormField(_fullNameController, 'Nombres completos', icon: Icons.person, hintText: 'Ingresa tu nombre'),
+              _buildTextFormField(_dniController, 'DNI', keyboardType: TextInputType.number, maxLength: 8, icon: Icons.badge, hintText: 'Ingresa tu DNI'),
               _buildTextFormField(
                 _dobController,
                 'Fecha de nacimiento',
                 readOnly: true,
                 onTap: () => _selectDate(context),
                 suffixIcon: Icons.calendar_today,
+                hintText: 'Selecciona tu fecha de nacimiento',
               ),
-              _buildTextFormField(_phoneController, 'Teléfono celular', keyboardType: TextInputType.phone),
-              _buildTextFormField(_emailController, 'Email', keyboardType: TextInputType.emailAddress),
-              _buildTextFormField(_addressController, 'Dirección de domicilio'),
-              _buildTextFormField(_departamentoController, 'Departamento'),
-              _buildTextFormField(_provinciaController, 'Provincia'),
-              _buildTextFormField(_distritoController, 'Distrito'),
+              _buildTextFormField(_phoneController, 'Teléfono celular', keyboardType: TextInputType.phone, icon: Icons.phone, hintText: 'Ingresa tu teléfono'),
+              _buildTextFormField(_emailController, 'Email', keyboardType: TextInputType.emailAddress, icon: Icons.email, hintText: 'Ingresa tu correo electrónico'),
+              _buildTextFormField(_addressController, 'Dirección de domicilio', icon: Icons.home, hintText: 'Ingresa tu dirección'),
+              _buildTextFormField(_departamentoController, 'Departamento', icon: Icons.location_city, hintText: 'Ingresa tu departamento'),
+              _buildTextFormField(_provinciaController, 'Provincia', icon: Icons.location_city, hintText: 'Ingresa tu provincia'),
+              _buildTextFormField(_distritoController, 'Distrito', icon: Icons.location_city, hintText: 'Ingresa tu distrito'),
 
               // Vehicle & Equipment
               _buildSectionTitle('Vehículo y Equipamiento'),
@@ -134,7 +135,7 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
                 },
               ),
               if (_selectedVehicleType == 'Moto' || _selectedVehicleType == 'Auto')
-                _buildTextFormField(_licensePlateController, 'Placa del vehículo'),
+                _buildTextFormField(_licensePlateController, 'Placa del vehículo', icon: Icons.traffic, hintText: 'Ingresa la placa del vehículo'),
               // SOAT and License are important but might be part of a later verification step
               // For now, we simplify the initial form.
               _buildCheckboxFormField('Tengo Casco de seguridad (si aplica)', _hasHelmet, (value) {
@@ -244,41 +245,63 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
     );
   }
 
-  Widget _buildTextFormField(TextEditingController controller, String label, {TextInputType keyboardType = TextInputType.text, bool isOptional = false, int? maxLength, bool readOnly = false, VoidCallback? onTap, IconData? suffixIcon}) {
+  Widget _buildTextFormField(
+    TextEditingController controller,
+    String label, {
+    TextInputType keyboardType = TextInputType.text,
+    bool isOptional = false,
+    int? maxLength,
+    IconData? icon,
+    String? hintText,
+    bool readOnly = false,
+    VoidCallback? onTap,
+    IconData? suffixIcon,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        maxLength: maxLength,
-        readOnly: readOnly,
-        onTap: onTap,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          labelText: label + (isOptional ? ' (Opcional)' : ''),
-          labelStyle: TextStyle(color: Colors.grey[400]),
-          filled: true,
-          fillColor: Colors.grey[800],
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(color: Colors.orange),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label + (isOptional ? ' (Opcional)' : ''),
+            style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 15),
           ),
-          counterText: maxLength != null ? '' : null, // Hide counter if maxLength is set
-          suffixIcon: suffixIcon != null ? Icon(suffixIcon, color: Colors.grey[400]) : null,
-        ),
-        validator: (value) {
-          if (!isOptional && (value == null || value.isEmpty)) {
-            return 'Este campo es obligatorio';
-          }
-          if (label == 'Email' && value != null && !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-            return 'Por favor ingresa un correo válido';
-          }
-          if (label == 'DNI' && value != null && (value.length != 8 || int.tryParse(value) == null)) {
-            return 'El DNI debe tener 8 dígitos numéricos';
-          }
-          return null;
-        },
+          const SizedBox(height: 6),
+          TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            maxLength: maxLength,
+            readOnly: readOnly,
+            onTap: onTap,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: TextStyle(color: Colors.grey[500]),
+              filled: true,
+              fillColor: Colors.grey[800],
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: const BorderSide(color: Colors.orange),
+              ),
+              prefixIcon: icon != null ? Icon(icon, color: Colors.grey[400]) : null,
+              suffixIcon: suffixIcon != null ? Icon(suffixIcon, color: Colors.grey[400]) : null,
+              counterText: maxLength != null ? '' : null,
+            ),
+            validator: (value) {
+              if (!isOptional && (value == null || value.isEmpty)) {
+                return 'Este campo es obligatorio';
+              }
+              if (label == 'Email' && value != null && !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                return 'Por favor ingresa un correo válido';
+              }
+              if (label == 'DNI' && value != null && (value.length != 8 || int.tryParse(value) == null)) {
+                return 'El DNI debe tener 8 dígitos numéricos';
+              }
+              return null;
+            },
+          ),
+        ],
       ),
     );
   }

@@ -67,8 +67,19 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
             children: <Widget>[
               // Basic Information
               _buildSectionTitle('Información Básica'),
-              _buildTextFormField(_businessNameController, 'Nombre del negocio/restaurante'),
-              _buildTextFormField(_rucController, 'RUC', keyboardType: TextInputType.number),
+              _buildTextFormField(
+                _businessNameController,
+                'Nombre del negocio/restaurante',
+                icon: Icons.store,
+                hintText: 'Ingresa el nombre de tu negocio',
+              ),
+              _buildTextFormField(
+                _rucController,
+                'RUC',
+                keyboardType: TextInputType.number,
+                icon: Icons.badge,
+                hintText: 'Ingresa el RUC',
+              ),
               DialogPickerFormField( // Replaced DropdownButtonFormField
                 label: 'Tipo de negocio',
                 value: _selectedBusinessType,
@@ -83,25 +94,74 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
                   return null;
                 },
               ),
-              _buildTextFormField(_businessDescriptionController, 'Descripción breve (opcional)', isOptional: true, maxLines: 3),
+              _buildTextFormField(
+                _businessDescriptionController,
+                'Descripción breve (opcional)',
+                isOptional: true,
+                maxLines: 3,
+                hintText: 'Ingresa una descripción breve',
+              ),
               
               // Contact Details
               _buildSectionTitle('Datos de Contacto'),
-              _buildTextFormField(_phoneController, 'Teléfono principal', keyboardType: TextInputType.phone),
-              _buildTextFormField(_emailController, 'Correo corporativo', keyboardType: TextInputType.emailAddress),
+              _buildTextFormField(
+                _phoneController,
+                'Teléfono principal',
+                keyboardType: TextInputType.phone,
+                icon: Icons.phone,
+                hintText: 'Ingresa tu teléfono',
+              ),
+              _buildTextFormField(
+                _emailController,
+                'Correo corporativo',
+                keyboardType: TextInputType.emailAddress,
+                icon: Icons.email,
+                hintText: 'Ingresa tu correo',
+              ),
 
               // Location
               _buildSectionTitle('Ubicación'),
-              _buildTextFormField(_addressController, 'Dirección completa'),
-              _buildTextFormField(_departamentoController, 'Departamento'),
-              _buildTextFormField(_provinciaController, 'Provincia'),
-              _buildTextFormField(_distritoController, 'Distrito'),
-              _buildTextFormField(_locationReferenceController, 'Referencias de ubicación', isOptional: true),
+              _buildTextFormField(
+                _addressController,
+                'Dirección completa',
+                icon: Icons.location_on,
+                hintText: 'Ingresa la dirección completa',
+              ),
+              _buildTextFormField(
+                _departamentoController,
+                'Departamento',
+                icon: Icons.apartment,
+                hintText: 'Ingresa el departamento',
+              ),
+              _buildTextFormField(
+                _provinciaController,
+                'Provincia',
+                icon: Icons.location_city,
+                hintText: 'Ingresa la provincia',
+              ),
+              _buildTextFormField(
+                _distritoController,
+                'Distrito',
+                icon: Icons.map,
+                hintText: 'Ingresa el distrito',
+              ),
+              _buildTextFormField(
+                _locationReferenceController,
+                'Referencias de ubicación',
+                isOptional: true,
+                icon: Icons.note,
+                hintText: 'Ingresa referencias de ubicación',
+              ),
               // TODO: Add GPS auto-detect / map pin functionality
 
               // Business Operations
               _buildSectionTitle('Operaciones del Negocio'),
-              _buildTextFormField(_openingHoursController, 'Horarios de atención (Ej: L-V 9am-6pm)'),
+              _buildTextFormField(
+                _openingHoursController,
+                'Horarios de atención (Ej: L-V 9am-6pm)',
+                icon: Icons.access_time,
+                hintText: 'Ingresa los horarios de atención',
+              ),
               _buildCheckboxFormField('Acepta efectivo', _acceptsCash, (value) {
                 setState(() {
                   _acceptsCash = value!;
@@ -115,7 +175,12 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
               
               // Legal & Financial
               _buildSectionTitle('Legal y Financiero (Simplificado)'),
-              _buildTextFormField(_legalRepController, 'Nombre del Representante Legal'),
+              _buildTextFormField(
+                _legalRepController,
+                'Nombre del Representante Legal',
+                icon: Icons.person,
+                hintText: 'Ingresa el nombre del representante legal',
+              ),
               const SizedBox(height: 10),
               const Text(
                 'Documentos como Licencia de Funcionamiento, Certificado DIGESA (si aplica) y Datos Bancarios se solicitarán posteriormente.',
@@ -174,37 +239,65 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
     );
   }
 
-  Widget _buildTextFormField(TextEditingController controller, String label, {TextInputType keyboardType = TextInputType.text, bool isOptional = false, int maxLines = 1}) {
+  Widget _buildTextFormField(
+    TextEditingController controller,
+    String label, {
+    TextInputType keyboardType = TextInputType.text,
+    bool isOptional = false,
+    int maxLines = 1,
+    IconData? icon,
+    String? hintText,
+    bool readOnly = false,
+    VoidCallback? onTap,
+    int? maxLength,
+    IconData? suffixIcon,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          labelText: label + (isOptional ? ' (Opcional)' : ''),
-          labelStyle: TextStyle(color: Colors.grey[400]),
-          filled: true,
-          fillColor: Colors.grey[800],
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(color: Colors.orange),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label + (isOptional ? ' (Opcional)' : ''),
+            style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 15),
           ),
-        ),
-        validator: (value) {
-          if (!isOptional && (value == null || value.isEmpty)) {
-            return 'Este campo es obligatorio';
-          }
-          if (label == 'Correo corporativo' && value != null && !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-            return 'Por favor ingresa un correo válido';
-          }
-          if (label == 'RUC' && value != null && (value.length != 11 || int.tryParse(value) == null)) {
-            return 'El RUC debe tener 11 dígitos numéricos';
-          }
-          return null;
-        },
+          const SizedBox(height: 6),
+          TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            maxLines: maxLines,
+            readOnly: readOnly,
+            onTap: onTap,
+            maxLength: maxLength,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: TextStyle(color: Colors.grey[500]),
+              filled: true,
+              fillColor: Colors.grey[800],
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: const BorderSide(color: Colors.orange),
+              ),
+              prefixIcon: icon != null ? Icon(icon, color: Colors.grey[400]) : null,
+              suffixIcon: suffixIcon != null ? Icon(suffixIcon, color: Colors.grey[400]) : null,
+              counterText: maxLength != null ? '' : null,
+            ),
+            validator: (value) {
+              if (!isOptional && (value == null || value.isEmpty)) {
+                return 'Este campo es obligatorio';
+              }
+              if (label.contains('Correo') && value != null && !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                return 'Por favor ingresa un correo válido';
+              }
+              if (label == 'RUC' && value != null && (value.length != 11 || int.tryParse(value) == null)) {
+                return 'El RUC debe tener 11 dígitos numéricos';
+              }
+              return null;
+            },
+          ),
+        ],
       ),
     );
   }
