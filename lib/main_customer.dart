@@ -208,7 +208,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               const SizedBox(height: 30),
               _buildBottomLink(context, 'Registrar mi negocio', 'Empieza a vender en Andafast', Icons.store),
               const SizedBox(height: 15),
-              _buildBottomLink(context, 'Ser courier Andafast', 'Genera ingresos repartiendo', Icons.delivery_dining),
+              _buildBottomLink(context, 'Ser repartidor en Perú Dash', 'Genera ingresos repartiendo', Icons.delivery_dining),
             ],
           ),
         ),
@@ -453,7 +453,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             context,
             MaterialPageRoute(builder: (context) => const RegisterBusinessScreen()),
           );
-        } else if (title == 'Ser courier Andafast') {
+        } else if (title == 'Ser repartidor en Perú Dash') {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const BecomeCourierScreen()),
