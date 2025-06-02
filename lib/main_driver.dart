@@ -89,7 +89,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
               ),
               const SizedBox(height: 10),
               Text(
-                'La super app de ya esta aquí!', // Subtitle from screenshot
+                'La super app de delivery ya esta aquí!', // Subtitle from screenshot
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
