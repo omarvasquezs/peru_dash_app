@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:peru_dash_app/customer_app/screens/register_business_screen.dart';
 import 'package:peru_dash_app/customer_app/screens/become_courier_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Add this import
+import 'package:google_sign_in/google_sign_in.dart'; // Added for Google Sign-In
 
 void main() {
   runApp(const CustomerApp());
@@ -78,6 +79,24 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   final _loginEmailController = TextEditingController();
   final _loginPasswordController = TextEditingController();
 
+  // Google Sign In
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  Future<void> _handleGoogleSignIn() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        // User cancelled the sign-in
+        return;
+      }
+      // TODO: Authenticate with your backend using googleUser.authentication
+      print('Google Sign In successful: ${googleUser.displayName}');
+      // Navigate to home screen or show success message
+    } catch (error) {
+      print('Google Sign In error: $error');
+      // Show error message
+    }
+  }
 
   @override
   void dispose() {
@@ -172,11 +191,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton.icon(
-                    onPressed: () {
-                      // TODO: Google Sign In
-                      print('Google Sign In Tapped');
-                      // Add your Google Sign-In logic here
-                    },
+                    onPressed: _handleGoogleSignIn, // Updated onPressed
                     icon: const FaIcon(FontAwesomeIcons.google, color: Colors.white), // Changed Icon
                     label: const Text('Google'),
                     style: ElevatedButton.styleFrom(
@@ -197,61 +212,75 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   }
 
   Widget _buildLoginForm(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Text('Correo electrónico', style: TextStyle(color: Colors.white70)),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: _loginEmailController,
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(
-            hintText: 'Ingresa tu correo',
-            prefixIcon: Icon(Icons.email_outlined, color: Colors.white70),
+    return Form( // Wrap with Form widget for validation
+      key: _formKey, // Assign the form key
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text('Correo electrónico', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _loginEmailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              hintText: 'Ingresa tu correo',
+              prefixIcon: Icon(Icons.email_outlined, color: Colors.white70),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingresa tu correo electrónico';
+              }
+              if (!RegExp(r'^[^@]+@[^@]+\\.[^@]+').hasMatch(value)) {
+                return 'Por favor ingresa un correo válido';
+              }
+              return null;
+            },
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Por favor ingresa tu correo electrónico';
-            }
-            if (!RegExp(r'^[^@]+@[^@]+\\.[^@]+').hasMatch(value)) {
-              return 'Por favor ingresa un correo válido';
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 15),
-        const Text('Contraseña', style: TextStyle(color: Colors.white70)),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: _loginPasswordController,
-          obscureText: true,
-          decoration: const InputDecoration(
-            hintText: 'Ingresa tu contraseña',
-            prefixIcon: Icon(Icons.lock_outline, color: Colors.white70),
+          const SizedBox(height: 15),
+          const Text('Contraseña', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _loginPasswordController,
+            obscureText: true,
+            decoration: const InputDecoration(
+              hintText: 'Ingresa tu contraseña',
+              prefixIcon: Icon(Icons.lock_outline, color: Colors.white70),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingresa tu contraseña';
+              }
+              return null;
+            },
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Por favor ingresa tu contraseña';
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {
-            // TODO: Implement Login
-            print('Login Tapped');
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Ingresar'),
-              SizedBox(width: 8),
-              Icon(Icons.arrow_forward),
-            ],
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                // If the form is valid, display a snackbar.
+                // Or, actually process the data.
+                print('Login Tapped - Form is valid');
+                print('Email: ${_loginEmailController.text}');
+                print('Password: ${_loginPasswordController.text}');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Iniciando sesión...')),
+                );
+                // TODO: Implement actual login logic here
+              } else {
+                print('Login Tapped - Form is invalid');
+              }
+            },
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Ingresar'),
+                SizedBox(width: 8),
+                Icon(Icons.arrow_forward),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
