@@ -18,7 +18,10 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
-  String? _selectedDistrict;
+  // Add Departamento and Provincia controllers
+  final _departamentoController = TextEditingController();
+  final _provinciaController = TextEditingController();
+  final _distritoController = TextEditingController(); // New text field for Distrito
   String? _selectedVehicleType;
   final _licensePlateController = TextEditingController();
   final _driverLicenseController = TextEditingController();
@@ -30,7 +33,6 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
   bool _agreedToPrivacy = false;
 
   // TODO: Populate with actual Lima districts and other relevant options
-  final List<String> _limaDistricts = ['Cercado de Lima', 'Miraflores', 'San Isidro', 'Surco', 'La Molina', 'Callao'];
   final List<String> _vehicleTypes = ['Moto', 'Bicicleta', 'Auto'];
   final List<String> _availabilityZones = ['Lima Centro', 'Lima Norte', 'Lima Sur', 'Lima Este', 'Callao'];
   final List<String> _workSchedules = ['Tiempo Completo', 'Medio Tiempo', 'Fines de Semana'];
@@ -43,6 +45,9 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
     _phoneController.dispose();
     _emailController.dispose();
     _addressController.dispose();
+    _departamentoController.dispose();
+    _provinciaController.dispose();
+    _distritoController.dispose();
     _licensePlateController.dispose();
     _driverLicenseController.dispose();
     super.dispose();
@@ -108,20 +113,9 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
               _buildTextFormField(_phoneController, 'Teléfono celular', keyboardType: TextInputType.phone),
               _buildTextFormField(_emailController, 'Email', keyboardType: TextInputType.emailAddress),
               _buildTextFormField(_addressController, 'Dirección de domicilio'),
-              DialogPickerFormField(
-                label: 'Distrito de residencia',
-                value: _selectedDistrict,
-                items: _limaDistricts,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedDistrict = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) return 'Este campo es obligatorio';
-                  return null;
-                },
-              ),
+              _buildTextFormField(_departamentoController, 'Departamento'),
+              _buildTextFormField(_provinciaController, 'Provincia'),
+              _buildTextFormField(_distritoController, 'Distrito'),
 
               // Vehicle & Equipment
               _buildSectionTitle('Vehículo y Equipamiento'),
