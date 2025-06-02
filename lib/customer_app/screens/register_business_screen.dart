@@ -19,7 +19,9 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
-  String? _selectedDistrict;
+  final _departamentoController = TextEditingController();
+  final _provinciaController = TextEditingController();
+  final _distritoController = TextEditingController();
   final _locationReferenceController = TextEditingController();
   final _openingHoursController = TextEditingController();
   bool _acceptsCash = false;
@@ -29,7 +31,6 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
   bool _agreedToPrivacy = false;
 
   // TODO: Populate with actual Lima districts
-  final List<String> _limaDistricts = ['Cercado de Lima', 'Miraflores', 'San Isidro', 'Surco', 'La Molina'];
   final List<String> _businessTypes = ['Restaurante', 'Farmacia', 'Supermercado', 'Tienda', 'Otro'];
 
   @override
@@ -40,6 +41,9 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
     _phoneController.dispose();
     _emailController.dispose();
     _addressController.dispose();
+    _departamentoController.dispose();
+    _provinciaController.dispose();
+    _distritoController.dispose();
     _locationReferenceController.dispose();
     _openingHoursController.dispose();
     _legalRepController.dispose();
@@ -84,26 +88,15 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
               // Contact Details
               _buildSectionTitle('Datos de Contacto'),
               _buildTextFormField(_phoneController, 'Teléfono principal', keyboardType: TextInputType.phone),
-              _buildTextFormField(_emailController, 'Email de contacto', keyboardType: TextInputType.emailAddress),
+              _buildTextFormField(_emailController, 'Correo corporativo', keyboardType: TextInputType.emailAddress),
 
               // Location
               _buildSectionTitle('Ubicación'),
               _buildTextFormField(_addressController, 'Dirección completa'),
-              DialogPickerFormField( // Replaced DropdownButtonFormField
-                label: 'Distrito',
-                value: _selectedDistrict,
-                items: _limaDistricts,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedDistrict = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) return 'Este campo es obligatorio';
-                  return null;
-                },
-              ),
-              _buildTextFormField(_locationReferenceController, 'Referencias de ubicación (opcional)', isOptional: true),
+              _buildTextFormField(_departamentoController, 'Departamento'),
+              _buildTextFormField(_provinciaController, 'Provincia'),
+              _buildTextFormField(_distritoController, 'Distrito'),
+              _buildTextFormField(_locationReferenceController, 'Referencias de ubicación', isOptional: true),
               // TODO: Add GPS auto-detect / map pin functionality
 
               // Business Operations
@@ -204,7 +197,7 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
           if (!isOptional && (value == null || value.isEmpty)) {
             return 'Este campo es obligatorio';
           }
-          if (label == 'Email de contacto' && value != null && !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+          if (label == 'Correo corporativo' && value != null && !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
             return 'Por favor ingresa un correo válido';
           }
           if (label == 'RUC' && value != null && (value.length != 11 || int.tryParse(value) == null)) {
