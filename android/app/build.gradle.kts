@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.peru_dash_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973" // Set required NDK version for google_sign_in_android
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
