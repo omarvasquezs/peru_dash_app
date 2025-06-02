@@ -188,15 +188,20 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               ),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center, // Center the button
                 children: [
-                  ElevatedButton.icon(
-                    onPressed: _handleGoogleSignIn, // Updated onPressed
-                    icon: const FaIcon(FontAwesomeIcons.google, color: Colors.white), // Changed Icon
-                    label: const Text('Google'),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFDB4437), // Google Red
-                        foregroundColor: Colors.white),
+                  Expanded( // Make button span horizontally
+                    child: ElevatedButton.icon(
+                      onPressed: _handleGoogleSignIn, // Updated onPressed
+                      icon: const FaIcon(FontAwesomeIcons.google, color: Colors.white), // Changed Icon
+                      label: const Text('Google'),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFDB4437), // Google Red
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12), // Adjust padding as needed
+                          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold), // Ensure text style matches other buttons
+                      ),
+                    ),
                   ),
                 ],
               ),
