@@ -68,15 +68,27 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
 
   // Controllers for registration form
   final _nameController = TextEditingController();
+  final _dniController = TextEditingController(); // Added DNI controller
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
-  String _selectedAccountType = 'Cliente'; // Default account type
+  final _passwordController = TextEditingController(); // Added Password controller
+  final _confirmPasswordController = TextEditingController(); // Added Confirm Password controller
+
+  // Controllers for login form
+  final _loginEmailController = TextEditingController();
+  final _loginPasswordController = TextEditingController();
+
 
   @override
   void dispose() {
     _nameController.dispose();
+    _dniController.dispose(); // Dispose DNI controller
     _emailController.dispose();
     _phoneController.dispose();
+    _passwordController.dispose(); // Dispose Password controller
+    _confirmPasswordController.dispose(); // Dispose Confirm Password controller
+    _loginEmailController.dispose();
+    _loginPasswordController.dispose();
     super.dispose();
   }
 
@@ -163,22 +175,12 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                     onPressed: () {
                       // TODO: Google Sign In
                       print('Google Sign In Tapped');
+                      // Add your Google Sign-In logic here
                     },
                     icon: const FaIcon(FontAwesomeIcons.google, color: Colors.white), // Changed Icon
                     label: const Text('Google'),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFDB4437), // Google Red
-                        foregroundColor: Colors.white),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // TODO: Apple Sign In
-                      print('Apple Sign In Tapped');
-                    },
-                    icon: const FaIcon(FontAwesomeIcons.apple, color: Colors.white), // Changed Icon
-                    label: const Text('Apple'),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
                         foregroundColor: Colors.white),
                   ),
                 ],
@@ -198,28 +200,52 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text('Número de teléfono', style: TextStyle(color: Colors.white70)),
+        const Text('Correo electrónico', style: TextStyle(color: Colors.white70)),
         const SizedBox(height: 8),
         TextFormField(
-          keyboardType: TextInputType.phone,
+          controller: _loginEmailController,
+          keyboardType: TextInputType.emailAddress,
           decoration: const InputDecoration(
-            hintText: '960096044',
-            prefixIcon: Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Text('+51', style: TextStyle(color: Colors.white70)),
-            )
+            hintText: 'Ingresa tu correo',
+            prefixIcon: Icon(Icons.email_outlined, color: Colors.white70),
           ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Por favor ingresa tu correo electrónico';
+            }
+            if (!RegExp(r'^[^@]+@[^@]+\\.[^@]+').hasMatch(value)) {
+              return 'Por favor ingresa un correo válido';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 15),
+        const Text('Contraseña', style: TextStyle(color: Colors.white70)),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _loginPasswordController,
+          obscureText: true,
+          decoration: const InputDecoration(
+            hintText: 'Ingresa tu contraseña',
+            prefixIcon: Icon(Icons.lock_outline, color: Colors.white70),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Por favor ingresa tu contraseña';
+            }
+            return null;
+          },
         ),
         const SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
-            // TODO: Send SMS Code
-            print('Send SMS Code Tapped');
+            // TODO: Implement Login
+            print('Login Tapped');
           },
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Enviar código SMS'),
+              Text('Ingresar'),
               SizedBox(width: 8),
               Icon(Icons.arrow_forward),
             ],
@@ -246,6 +272,28 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Por favor ingresa tu nombre';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 15),
+          const Text('DNI', style: TextStyle(color: Colors.white70)), // DNI field
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _dniController,
+            keyboardType: TextInputType.number,
+            maxLength: 8, // Add maxLength for DNI
+            decoration: const InputDecoration(
+              hintText: 'Ingresa tu DNI',
+              prefixIcon: Icon(Icons.assignment_ind, color: Colors.white70),
+              counterText: "", // Hide the counter text
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingresa tu DNI';
+              }
+              if (value.length != 8) { // Add length validation
+                return 'El DNI debe tener 8 dígitos';
               }
               return null;
             },
@@ -295,15 +343,41 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             },
           ),
           const SizedBox(height: 15),
-          const Text('Tipo de cuenta', style: TextStyle(color: Colors.white70)),
+          const Text('Contraseña', style: TextStyle(color: Colors.white70)),
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildAccountTypeButton(context, 'Cliente', Icons.person, _selectedAccountType == 'Cliente', () => setState(() => _selectedAccountType = 'Cliente')),
-              _buildAccountTypeButton(context, 'Comercio', Icons.storefront, _selectedAccountType == 'Comercio', () => setState(() => _selectedAccountType = 'Comercio')),
-              _buildAccountTypeButton(context, 'Repartidor', Icons.delivery_dining, _selectedAccountType == 'Repartidor', () => setState(() => _selectedAccountType = 'Repartidor')),
-            ],
+          TextFormField(
+            controller: _passwordController,
+            obscureText: true,
+            decoration: const InputDecoration(
+              hintText: 'Ingresa tu contraseña',
+              prefixIcon: Icon(Icons.lock_outline, color: Colors.white70),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingresa tu contraseña';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 15),
+          const Text('Confirmar contraseña', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _confirmPasswordController,
+            obscureText: true,
+            decoration: const InputDecoration(
+              hintText: 'Confirma tu contraseña',
+              prefixIcon: Icon(Icons.lock_outline, color: Colors.white70),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor confirma tu contraseña';
+              }
+              if (value != _passwordController.text) {
+                return 'Las contraseñas no coinciden';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 30),
           ElevatedButton(
@@ -313,9 +387,9 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                 // Or, actually process the data.
                 print('Create Account Tapped - Form is valid');
                 print('Name: ${_nameController.text}');
+                print('DNI: ${_dniController.text}');
                 print('Email: ${_emailController.text}');
                 print('Phone: ${_phoneController.text}');
-                print('Account Type: $_selectedAccountType');
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Procesando datos...')),
                 );
@@ -337,26 +411,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     );
   }
 
-  Widget _buildAccountTypeButton(BuildContext context, String label, IconData icon, bool isSelected, VoidCallback onPressed) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        child: ElevatedButton.icon(
-          onPressed: onPressed,
-          icon: Icon(icon, size: 20),
-          label: Text(label, style: const TextStyle(fontSize: 12)),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isSelected ? Colors.orange : Colors.grey[700],
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        ),
-      ),
-    );
-  }
-
-   Widget _buildBottomLink(BuildContext context, String title, String subtitle, IconData icon) {
+  Widget _buildBottomLink(BuildContext context, String title, String subtitle, IconData icon) {
     return InkWell(
       onTap: () {
         if (title == 'Registrar mi negocio') {
