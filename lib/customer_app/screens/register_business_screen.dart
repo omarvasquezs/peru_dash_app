@@ -24,8 +24,6 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
   final _distritoController = TextEditingController();
   final _locationReferenceController = TextEditingController();
   final _openingHoursController = TextEditingController();
-  bool _acceptsCash = false;
-  bool _acceptsYapePlin = false;
   final _legalRepController = TextEditingController();
   bool _agreedToTerms = false;
   bool _agreedToPrivacy = false;
@@ -80,7 +78,15 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
                 icon: Icons.badge,
                 hintText: 'Ingresa el RUC',
               ),
-              DialogPickerFormField( // Replaced DropdownButtonFormField
+              // Tipo de negocio label
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 6.0),
+                child: Text(
+                  'Tipo de negocio',
+                  style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 15),
+                ),
+              ),
+              DialogPickerFormField(
                 label: 'Tipo de negocio',
                 value: _selectedBusinessType,
                 items: _businessTypes,
@@ -123,15 +129,15 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
               _buildSectionTitle('Ubicación'),
               _buildTextFormField(
                 _addressController,
-                'Dirección completa',
+                'Dirección de domicilio',
                 icon: Icons.location_on,
                 hintText: 'Ingresa la dirección completa',
               ),
               _buildTextFormField(
-                _departamentoController,
-                'Departamento',
-                icon: Icons.apartment,
-                hintText: 'Ingresa el departamento',
+                _distritoController,
+                'Distrito',
+                icon: Icons.map,
+                hintText: 'Ingresa el distrito',
               ),
               _buildTextFormField(
                 _provinciaController,
@@ -140,10 +146,10 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
                 hintText: 'Ingresa la provincia',
               ),
               _buildTextFormField(
-                _distritoController,
-                'Distrito',
-                icon: Icons.map,
-                hintText: 'Ingresa el distrito',
+                _departamentoController,
+                'Departamento',
+                icon: Icons.apartment,
+                hintText: 'Ingresa el departamento',
               ),
               _buildTextFormField(
                 _locationReferenceController,
@@ -161,25 +167,31 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
                 'Horarios de atención (Ej: L-V 9am-6pm)',
                 icon: Icons.access_time,
                 hintText: 'Ingresa los horarios de atención',
+                maxLines: 3,
               ),
-              _buildCheckboxFormField('Acepta efectivo', _acceptsCash, (value) {
-                setState(() {
-                  _acceptsCash = value!;
-                });
-              }),
-              _buildCheckboxFormField('Acepta Yape/Plin', _acceptsYapePlin, (value) {
-                setState(() {
-                  _acceptsYapePlin = value!;
-                });
-              }),
               
               // Legal & Financial
-              _buildSectionTitle('Legal y Financiero (Simplificado)'),
+              _buildSectionTitle('Legal y Financiero'),
               _buildTextFormField(
                 _legalRepController,
                 'Nombre del Representante Legal',
                 icon: Icons.person,
                 hintText: 'Ingresa el nombre del representante legal',
+              ),
+              _buildTextFormField(
+                TextEditingController(),
+                'Teléfono del Representante Legal',
+                keyboardType: TextInputType.phone,
+                icon: Icons.phone,
+                hintText: 'Ingresa el teléfono del representante legal',
+              ),
+              _buildTextFormField(
+                TextEditingController(),
+                'DNI del Representante Legal',
+                keyboardType: TextInputType.number,
+                icon: Icons.badge,
+                hintText: 'Ingresa el DNI del representante legal',
+                maxLength: 8,
               ),
               const SizedBox(height: 10),
               const Text(

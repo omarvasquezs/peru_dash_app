@@ -27,14 +27,12 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
   final _driverLicenseController = TextEditingController();
   bool _hasHelmet = false;
   bool _hasThermalBag = false;
-  String? _selectedAvailabilityZone;
   String? _selectedWorkSchedule; // Full-time, Part-time
   bool _agreedToTerms = false;
   bool _agreedToPrivacy = false;
 
   // TODO: Populate with actual Lima districts and other relevant options
   final List<String> _vehicleTypes = ['Moto', 'Bicicleta', 'Auto'];
-  final List<String> _availabilityZones = ['Lima Centro', 'Lima Norte', 'Lima Sur', 'Lima Este', 'Callao'];
   final List<String> _workSchedules = ['Tiempo Completo', 'Medio Tiempo', 'Fines de Semana'];
 
   @override
@@ -114,9 +112,9 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
               _buildTextFormField(_phoneController, 'Teléfono celular', keyboardType: TextInputType.phone, icon: Icons.phone, hintText: 'Ingresa tu teléfono'),
               _buildTextFormField(_emailController, 'Email', keyboardType: TextInputType.emailAddress, icon: Icons.email, hintText: 'Ingresa tu correo electrónico'),
               _buildTextFormField(_addressController, 'Dirección de domicilio', icon: Icons.home, hintText: 'Ingresa tu dirección'),
-              _buildTextFormField(_departamentoController, 'Departamento', icon: Icons.location_city, hintText: 'Ingresa tu departamento'),
-              _buildTextFormField(_provinciaController, 'Provincia', icon: Icons.location_city, hintText: 'Ingresa tu provincia'),
               _buildTextFormField(_distritoController, 'Distrito', icon: Icons.location_city, hintText: 'Ingresa tu distrito'),
+              _buildTextFormField(_provinciaController, 'Provincia', icon: Icons.location_city, hintText: 'Ingresa tu provincia'),
+              _buildTextFormField(_departamentoController, 'Departamento', icon: Icons.location_city, hintText: 'Ingresa tu departamento'),
 
               // Vehicle & Equipment
               _buildSectionTitle('Vehículo y Equipamiento'),
@@ -151,19 +149,12 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
 
               // Availability
               _buildSectionTitle('Disponibilidad'),
-              DialogPickerFormField(
-                label: 'Zonas donde puede trabajar',
-                value: _selectedAvailabilityZone,
-                items: _availabilityZones,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedAvailabilityZone = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) return 'Este campo es obligatorio';
-                  return null;
-                },
+              _buildTextFormField(
+                TextEditingController(),
+                'Zonas donde puede trabajar',
+                maxLines: 3,
+                icon: Icons.map,
+                hintText: 'Describe las zonas donde puedes trabajar',
               ),
               DialogPickerFormField(
                 label: 'Disponibilidad horaria',
@@ -256,6 +247,7 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
     bool readOnly = false,
     VoidCallback? onTap,
     IconData? suffixIcon,
+    int maxLines = 1,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -273,6 +265,7 @@ class _BecomeCourierScreenState extends State<BecomeCourierScreen> {
             maxLength: maxLength,
             readOnly: readOnly,
             onTap: onTap,
+            maxLines: maxLines,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: hintText,
