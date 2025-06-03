@@ -83,6 +83,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
   bool _agreedToPrivacy = false;
   final List<String> _vehicleTypes = ['Moto', 'Bicicleta', 'Auto'];
   final List<String> _workSchedules = ['Tiempo Completo', 'Medio Tiempo', 'Fines de Semana'];
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
@@ -96,6 +98,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
     _provinciaController.dispose();
     _distritoController.dispose();
     _licensePlateController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -291,6 +295,40 @@ class _DriverHomePageState extends State<DriverHomePage> {
           ),
           _buildTextFormField(_phoneController, 'Teléfono celular', keyboardType: TextInputType.phone, icon: Icons.phone, hintText: 'Ingresa tu teléfono'),
           _buildTextFormField(_emailController, 'Email', keyboardType: TextInputType.emailAddress, icon: Icons.email, hintText: 'Ingresa tu correo electrónico'),
+          const Text('Contraseña', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          _buildTextFormField(_passwordController, 'Contraseña',
+            icon: Icons.lock_outline,
+            hintText: 'Crea una contraseña segura',
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: true,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingresa una contraseña';
+              }
+              if (value.length < 6) {
+                return 'La contraseña debe tener al menos 6 caracteres';
+              }
+              return null;
+            },
+          ),
+          const Text('Repetir Contraseña', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          _buildTextFormField(_confirmPasswordController, 'Repetir Contraseña',
+            icon: Icons.lock_outline,
+            hintText: 'Repite la contraseña',
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: true,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor repite la contraseña';
+              }
+              if (value != _passwordController.text) {
+                return 'Las contraseñas no coinciden';
+              }
+              return null;
+            },
+          ),
           _buildTextFormField(_addressController, 'Dirección de domicilio', icon: Icons.home, hintText: 'Ingresa tu dirección'),
           _buildTextFormField(_distritoController, 'Distrito', icon: Icons.location_city, hintText: 'Ingresa tu distrito'),
           _buildTextFormField(_provinciaController, 'Provincia', icon: Icons.location_city, hintText: 'Ingresa tu provincia'),
@@ -420,6 +458,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
     VoidCallback? onTap,
     IconData? suffixIcon,
     int maxLines = 1,
+    bool obscureText = false,
+    String? Function(String?)? validator,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -438,6 +478,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
             readOnly: readOnly,
             onTap: onTap,
             maxLines: maxLines,
+            obscureText: obscureText,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: hintText,
@@ -453,7 +494,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
               suffixIcon: suffixIcon != null ? Icon(suffixIcon, color: Colors.grey[400]) : null,
               counterText: maxLength != null ? '' : null,
             ),
-            validator: (value) {
+            validator: validator ?? (value) {
               if (!isOptional && (value == null || value.isEmpty)) {
                 return 'Este campo es obligatorio';
               }
