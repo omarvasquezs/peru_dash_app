@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Add this import
 import 'package:peru_dash_app/shared_widgets/dialog_picker_form_field.dart'; // For dialog pickers
+import 'package:peru_dash_app/services/api_service.dart'; // Add API service
 
 void main() {
   runApp(const DriverApp());
@@ -404,9 +405,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
             });
           }, isRequired: true),
 
-          const SizedBox(height: 30),
-          ElevatedButton(
-            onPressed: () {
+          const SizedBox(height: 30),          ElevatedButton(
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 if (!_agreedToTerms || !_agreedToPrivacy) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -420,9 +420,86 @@ class _DriverHomePageState extends State<DriverHomePage> {
                   );
                   return;
                 }
-                // Process data
-                print('Formulario de Ser Repartidor Válido');
-                // TODO: Implement actual data submission
+                
+                // Show loading indicator
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return const AlertDialog(
+                      content: Row(
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(width: 20),
+                          Text("Enviando solicitud..."),
+                        ],
+                      ),
+                    );
+                  },
+                );
+
+                // Submit driver registration
+                final result = await ApiService.registerDriver(
+                  fullName: _fullNameController.text,
+                  dni: _dniController.text,
+                  dateOfBirth: _dobController.text,
+                  phone: _phoneController.text,
+                  email: _emailController.text,
+                  password: _passwordController.text,
+                  address: _addressController.text,
+                  distrito: _distritoController.text,
+                  provincia: _provinciaController.text,
+                  departamento: _departamentoController.text,
+                  vehicleType: _selectedVehicleType!,
+                  licensePlate: _licensePlateController.text.isEmpty ? null : _licensePlateController.text,
+                  hasHelmet: _hasHelmet,
+                  hasThermalBag: _hasThermalBag,
+                  workSchedule: _selectedWorkSchedule!,
+                );
+
+                // Hide loading indicator
+                Navigator.of(context).pop();
+
+                // Show result
+                if (result['success']) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('¡Éxito!'),
+                        content: Text(result['message']),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              // Reset form or navigate to login
+                              setState(() {
+                                _isLogin = true;
+                              });
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Error'),
+                        content: Text(result['message']),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               }
             },
             style: ElevatedButton.styleFrom(
