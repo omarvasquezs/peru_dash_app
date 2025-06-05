@@ -36,12 +36,12 @@ android {
         create("customer") {
             dimension = "appType"
             applicationIdSuffix = ".customer"
-            resValue("string", "app_name", "PeruDash")
+            resValue("string", "app_name", "Andafast Delivery")
         }
         create("driver") {
             dimension = "appType"
             applicationIdSuffix = ".driver"
-            resValue("string", "app_name", "Soy PeruDash")
+            resValue("string", "app_name", "Andafast Driver")
         }
     }
 

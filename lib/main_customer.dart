@@ -48,7 +48,7 @@ class CustomerApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const CustomerHomePage(title: 'Bienvenido a Perú Dash!'), // Updated title
+      home: const CustomerHomePage(title: 'Bienvenido a Andafast Delivery!'), // Updated title
       // home: Scaffold(appBar: AppBar(title: const Text('Test Customer App')), body: const Center(child: Text('Loading Test...'))), // Temporary simple home
     );
   }
@@ -125,7 +125,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                 height: 100,
                 margin: const EdgeInsets.symmetric(vertical: 30),
                 alignment: Alignment.center,
-                child: Image.asset( // Placeholder for logo, replace with your asset
+                child: Image.asset(
                   'assets/images/logo.png',
                   height: 80,
                 ),
@@ -208,7 +208,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               const SizedBox(height: 30),
               _buildBottomLink(context, 'Registrar mi negocio', 'Empieza a vender en Andafast', Icons.store),
               const SizedBox(height: 15),
-              _buildBottomLink(context, 'Ser repartidor en Perú Dash', 'Genera ingresos repartiendo', Icons.delivery_dining),
+              _buildBottomLink(context, 'Ser repartidor en Andafast', 'Genera ingresos repartiendo', Icons.delivery_dining),
             ],
           ),
         ),
@@ -453,7 +453,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             context,
             MaterialPageRoute(builder: (context) => const RegisterBusinessScreen()),
           );
-        } else if (title == 'Ser repartidor en Perú Dash') {
+        } else if (title == 'Ser repartidor en Andafast') {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const BecomeCourierScreen()),
