@@ -6,7 +6,7 @@ class ApiConfig {
   
   // Current environment - change this based on your testing scenario
   static const bool _isProduction = false;
-  static const bool _isEmulator = false; // Set to true if testing on emulator
+  static const bool _isEmulator = true; // Set to true if testing on emulator
   
   static String get baseUrl {
     if (_isProduction) {

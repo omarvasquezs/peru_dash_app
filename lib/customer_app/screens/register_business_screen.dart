@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:peru_dash_app/shared_widgets/dialog_picker_form_field.dart'; // Import the new widget
+import 'package:peru_dash_app/services/api_service.dart'; // Import ApiService
 
 class RegisterBusinessScreen extends StatefulWidget {
   const RegisterBusinessScreen({super.key});
@@ -215,7 +216,7 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
 
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     if (!_agreedToTerms || !_agreedToPrivacy) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -224,8 +225,32 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
                       return;
                     }
                     // Process data
-                    print('Formulario de Registro de Negocio Válido');
-                    // TODO: Implement actual data submission
+                    final result = await ApiService.registerBusiness(
+                      businessName: _businessNameController.text,
+                      ruc: _rucController.text,
+                      businessType: _selectedBusinessType ?? '',
+                      legalRepresentativeName: _legalRepController.text,
+                      legalRepresentativeDni: '', // TODO: Add controller for DNI
+                      addressStreet: _addressController.text,
+                      addressDistrict: _distritoController.text,
+                      addressProvince: _provinciaController.text,
+                      addressDepartment: _departamentoController.text,
+                      phoneNumber: _phoneController.text,
+                      corporateEmail: _emailController.text,
+                      password: 'changeme', // TODO: Add password field/controller
+                      operatingHours: {}, // TODO: Add operating hours logic
+                      agreedToTerms: _agreedToTerms,
+                      agreedToPrivacy: _agreedToPrivacy,
+                    );
+                    if (result['success']) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Negocio registrado exitosamente')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(result['message'] ?? 'Error al registrar negocio')),
+                      );
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(

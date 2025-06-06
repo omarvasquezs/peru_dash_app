@@ -111,6 +111,56 @@ class ApiService {
     }
   }
 
+  // Business Registration
+  static Future<Map<String, dynamic>> registerBusiness({
+    required String businessName,
+    required String ruc,
+    required String businessType,
+    required String legalRepresentativeName,
+    required String legalRepresentativeDni,
+    required String addressStreet,
+    required String addressDistrict,
+    required String addressProvince,
+    required String addressDepartment,
+    required String phoneNumber,
+    required String corporateEmail,
+    required String password,
+    required Map<String, dynamic> operatingHours,
+    required bool agreedToTerms,
+    required bool agreedToPrivacy,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://perudashapi.ddev.site/api/register/business'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'business_name': businessName,
+          'ruc': ruc,
+          'business_type': businessType,
+          'legal_representative_name': legalRepresentativeName,
+          'legal_representative_dni': legalRepresentativeDni,
+          'address_street': addressStreet,
+          'address_district': addressDistrict,
+          'address_province': addressProvince,
+          'address_department': addressDepartment,
+          'phone_number': phoneNumber,
+          'corporate_email': corporateEmail,
+          'password': password,
+          'operating_hours': operatingHours,
+          'user_type': 'business',
+          'agreed_to_terms': agreedToTerms,
+          'agreed_to_privacy': agreedToPrivacy,
+        }),
+      );
+      return _handleResponse(response);
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Error de conexión: ${e.toString()}',
+      };
+    }
+  }
+
   // Handle HTTP Response
   static Map<String, dynamic> _handleResponse(http.Response response) {
     try {

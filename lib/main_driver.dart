@@ -87,6 +87,10 @@ class _DriverHomePageState extends State<DriverHomePage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
+  // Place these at the top of _DriverHomePageState
+  final _loginIdentifierController = TextEditingController();
+  final _loginPasswordController = TextEditingController();
+
   @override
   void dispose() {
     _fullNameController.dispose();
@@ -101,6 +105,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
     _licensePlateController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _loginIdentifierController.dispose();
+    _loginPasswordController.dispose();
     super.dispose();
   }
 
@@ -237,43 +243,83 @@ class _DriverHomePageState extends State<DriverHomePage> {
   }
 
   Widget _buildDriverLoginForm(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Text('Número de teléfono o ID de Conductor', style: TextStyle(color: Colors.white70)),
-        const SizedBox(height: 8),
-        TextFormField(
-          decoration: const InputDecoration(
-            hintText: 'Ingresa tu número o ID',
-            prefixIcon: Icon(Icons.person_pin_circle_outlined, color: Colors.white70),
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text('Número de teléfono o ID de Conductor', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _loginIdentifierController,
+            decoration: const InputDecoration(
+              hintText: 'Ingresa tu número o ID',
+              prefixIcon: Icon(Icons.person_pin_circle_outlined, color: Colors.white70),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingresa tu número o correo';
+              }
+              return null;
+            },
           ),
-        ),
-        const SizedBox(height: 15),
-        const Text('Contraseña', style: TextStyle(color: Colors.white70)),
-        const SizedBox(height: 8),
-        TextFormField(
-          obscureText: true,
-          decoration: const InputDecoration(
-            hintText: 'Ingresa tu contraseña',
-            prefixIcon: Icon(Icons.lock_outline, color: Colors.white70),
+          const SizedBox(height: 15),
+          const Text('Contraseña', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _loginPasswordController,
+            obscureText: true,
+            decoration: const InputDecoration(
+              hintText: 'Ingresa tu contraseña',
+              prefixIcon: Icon(Icons.lock_outline, color: Colors.white70),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingresa tu contraseña';
+              }
+              return null;
+            },
           ),
-        ),
-        const SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {
-            // TODO: Driver Login
-            print('Driver Login Tapped');
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Ingresar como Conductor'),
-              SizedBox(width: 8),
-              Icon(Icons.arrow_forward),
-            ],
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () async {
+              FocusScope.of(context).unfocus(); // Hide keyboard
+              if (_formKey.currentState!.validate()) {
+                final result = await ApiService.login(
+                  identifier: _loginIdentifierController.text,
+                  password: _loginPasswordController.text,
+                  userType: 'driver',
+                );
+                if (result['success'] == true) {
+                  final user = result['data']?['user'];
+                  // Defensive: check if user is a Map and has the expected keys
+                  String driverName = 'Conductor';
+                  if (user is Map) {
+                    driverName = user['name']?.toString() ?? user['full_name']?.toString() ?? 'Conductor';
+                  }
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => DriverDashboardScreen(driverName: driverName),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(result['message'] ?? 'Error de login')),
+                  );
+                }
+              }
+            },
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Ingresar como Conductor'),
+                SizedBox(width: 8),
+                Icon(Icons.arrow_forward),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -628,6 +674,105 @@ class _DriverHomePageState extends State<DriverHomePage> {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class DriverDashboardScreen extends StatelessWidget {
+  final String driverName;
+  const DriverDashboardScreen({super.key, required this.driverName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Panel de Conductor'),
+        backgroundColor: Colors.orange,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
+            tooltip: 'Cerrar sesión',
+          ),
+        ],
+      ),
+      backgroundColor: const Color(0xFF1A202C),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  Image.asset('assets/images/logo_driver.png', height: 80),
+                  const SizedBox(height: 16),
+                  Text(
+                    '¡Hola, $driverName!',
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Tu panel de conductor',
+                    style: TextStyle(fontSize: 16, color: Colors.white70),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 30),
+            Card(
+              color: Colors.grey[900],
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
+                leading: const Icon(Icons.delivery_dining, color: Colors.orange, size: 36),
+                title: const Text('Pedidos disponibles', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                subtitle: const Text('Ver y aceptar nuevos pedidos cerca de ti', style: TextStyle(color: Colors.white70)),
+                trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white54),
+                onTap: () {
+                  // TODO: Navegar a pantalla de pedidos
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              color: Colors.grey[900],
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
+                leading: const Icon(Icons.history, color: Colors.orange, size: 36),
+                title: const Text('Historial de entregas', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                subtitle: const Text('Revisa tus entregas anteriores', style: TextStyle(color: Colors.white70)),
+                trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white54),
+                onTap: () {
+                  // TODO: Navegar a historial
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              color: Colors.grey[900],
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
+                leading: const Icon(Icons.account_circle, color: Colors.orange, size: 36),
+                title: const Text('Mi perfil', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                subtitle: const Text('Ver y editar tu información personal', style: TextStyle(color: Colors.white70)),
+                trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white54),
+                onTap: () {
+                  // TODO: Navegar a perfil
+                },
+              ),
+            ),
+            const Spacer(),
+            Center(
+              child: Text(
+                'ANDAFAST Driver v1.0',
+                style: TextStyle(color: Colors.white24, fontSize: 12),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
